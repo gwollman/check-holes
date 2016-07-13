@@ -26,6 +26,10 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+#ifdef __linux__
+#define _GNU_SOURCE 1
+#endif
+
 #include <sys/types.h>
 #include <err.h>
 #include <errno.h>
@@ -74,6 +78,9 @@ main(int argc, char *const *argv)
 			err(1, "%s", fn);
 		}
 		errno = 0;
+#ifndef __linux__
+		/* Apparently there is no way on Linux to find out if this
+		   even works at all. */
 		min_size = fpathconf(fd, _PC_MIN_HOLE_SIZE);
 		if (errno != 0) {
 			warn("%s: fpathconf(_PC_MIN_HOLE_SIZE)", fn);
@@ -84,7 +91,8 @@ main(int argc, char *const *argv)
 			rc = EXIT_FAILURE;
 			goto next_file;
 		}
-	
+#endif
+
 		current = 0;
 		count = 0;
 		total_size = 0;
