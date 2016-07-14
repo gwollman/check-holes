@@ -15,4 +15,8 @@ size they account for.  It accepts a single flag, -q, which suppresses
 the output of individual holes and also suppresses the summary if no
 holes are found.
 
-This code has only been compiled or tested on FreeBSD.
+On a FreeBSD system, the included Makefile will build and install the
+program and its associated manual page.  To compile on Linux, use
+```
+$ cc -O -Wall -o check-holes check-holes.c
+```
