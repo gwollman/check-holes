@@ -80,7 +80,7 @@ main(int argc, char *const *argv)
 			err(1, "%s", fn);
 		}
 		errno = 0;
-#ifndef _PC_MIN_HOLE_SIZE
+#ifdef _PC_MIN_HOLE_SIZE
 		/* Apparently there is no way on Linux to find out if this
 		   even works at all. */
 		min_size = fpathconf(fd, _PC_MIN_HOLE_SIZE);
