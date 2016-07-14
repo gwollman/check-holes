@@ -1,0 +1,88 @@
+.\" Copyright 2016 Massachusetts Institute of Technology
+.\" 
+.\" Permission to use, copy, modify, and distribute this software and
+.\" its documentation for any purpose and without fee is hereby
+.\" granted, provided that both the above copyright notice and this
+.\" permission notice appear in all copies, that both the above
+.\" copyright notice and this permission notice appear in all
+.\" supporting documentation, and that the name of M.I.T. not be used
+.\" in advertising or publicity pertaining to distribution of the
+.\" software without specific, written prior permission.  M.I.T. makes
+.\" no representations about the suitability of this software for any
+.\" purpose.  It is provided "as is" without express or implied
+.\" warranty.
+.\" 
+.\" THIS SOFTWARE IS PROVIDED BY M.I.T. ``AS IS''.  M.I.T. DISCLAIMS
+.\" ALL EXPRESS OR IMPLIED WARRANTIES WITH REGARD TO THIS SOFTWARE,
+.\" INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+.\" MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. IN NO EVENT
+.\" SHALL M.I.T. BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+.\" SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+.\" LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+.\" USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+.\" ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+.\" OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+.\" OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+.\" SUCH DAMAGE.
+.Dd July 14, 2016
+.Dt CHECK-HOLES 1
+.Os
+.Sh NAME
+.Nm check-holes
+.Nd "identify the location and number of holes in a set of files"
+.Sh SYNOPSIS
+.Nm
+.Op Fl q
+.Ar
+.Sh DESCRIPTION
+The
+.Nm
+scans a set of files for holes and outputs the number and total size
+of the holes in each file.
+By default,
+.Nm
+identifies the starting and ending file offset of each hole.
+A
+.Dq hole
+is a region of a file which has no storage allocated for it, but is
+zero-filled on demand; see
+.Xr lseek 2
+for more information.
+Files with holes are also known as
+.Dq sparse
+files.
+If an error occurs while scanning,
+.Nm
+will proceed to the next file specified.
+.Pp
+The
+.Nm
+command accepts the following option:
+.Bl -tag -width Fl
+.It Fl q
+Do not print the location of each hole in each file, and only print the
+summary for files that have one or more holes.
+.El
+.Sh EXIT STATUS
+.Ex -std
+If multiple files are specified, any error during scanning will result in a
+nonzero exit status, even if some files are scanned successfully.
+.Sh DIAGNOSTICS
+The command may fail for any of the reasons documented for
+.Xr open 2
+and
+.Xr lseek 2 .
+In addition, if file system on which one of the arguments is located
+does not implement sparse files,
+or does not provide the means to locate holes in such files, a warning will
+be written and the exit status will be nonzero.
+.Sh SEE ALSO
+.Xr lseek 2
+.Sh AUTHORS
+The
+.Nm
+command and this manual page were written by
+.An Garrett Wollman Aq wollman@csail.mit.edu .
+.Sh BUGS
+When running on the Linux kernel, there is no way to determine whether
+a file system implementation supports sparse files.
