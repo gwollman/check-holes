@@ -70,7 +70,9 @@ main(int argc, char *const *argv)
 		const char *fn = *argv;
 		off_t current;
 		int fd, count;
+#ifdef _PC_MIN_HOLE_SIZE
 		long min_size;
+#endif
 		intmax_t size, total_size;
 
 		fd = open(fn, O_RDONLY, 0);
@@ -78,7 +80,7 @@ main(int argc, char *const *argv)
 			err(1, "%s", fn);
 		}
 		errno = 0;
-#ifndef __linux__
+#ifndef _PC_MIN_HOLE_SIZE
 		/* Apparently there is no way on Linux to find out if this
 		   even works at all. */
 		min_size = fpathconf(fd, _PC_MIN_HOLE_SIZE);
@@ -91,7 +93,7 @@ main(int argc, char *const *argv)
 			rc = EXIT_FAILURE;
 			goto next_file;
 		}
-#endif
+#endif /* _PC_MIN_HOLE_SIZE */
 
 		current = 0;
 		count = 0;
