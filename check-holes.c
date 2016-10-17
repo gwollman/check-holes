@@ -77,12 +77,14 @@ main(int argc, char *const *argv)
 
 		fd = open(fn, O_RDONLY, 0);
 		if (fd == -1) {
-			err(1, "%s", fn);
+			warn("%s", fn);
+			rc = EXIT_FAILURE;
+			goto next_file;
 		}
-		errno = 0;
 #ifdef _PC_MIN_HOLE_SIZE
 		/* Apparently there is no way on Linux to find out if this
 		   even works at all. */
+		errno = 0;
 		min_size = fpathconf(fd, _PC_MIN_HOLE_SIZE);
 		if (errno != 0) {
 			warn("%s: fpathconf(_PC_MIN_HOLE_SIZE)", fn);
